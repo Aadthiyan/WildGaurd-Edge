@@ -1,0 +1,7 @@
+streamlit
+numpy
+librosa
+requests
+pandas
+flask
+flask-cors
