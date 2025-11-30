@@ -341,51 +341,61 @@ def predict_fire_fallback(features):
         total_energy = np.sum(np.abs(features))
         energy_variance = np.var(features)
         
-        # Fire detection score (0-1)
-        fire_score = 0.0
-        
-        # 1. High energy content (fire is loud) - 20%
-        # INCREASED thresholds to reduce false positives
-        if total_energy > 5.0:
-            fire_score += 0.20
-        elif total_energy > 3.0:
-            fire_score += 0.10
-            
-        # 2. High variance (fire crackles and pops) - 25%
-        # INCREASED thresholds
-        if mfcc_std > 2.0:
-            fire_score += 0.25
-        elif mfcc_std > 1.2:
-            fire_score += 0.15
-            
-        # 3. Broadband energy (fire has wide frequency range) - 20%
-        # INCREASED thresholds
+        # Calculate key metrics
         freq_spread = mfcc_max - mfcc_min
-        if freq_spread > 4.0:
-            fire_score += 0.20
-        elif freq_spread > 2.5:
-            fire_score += 0.10
-            
-        # 4. High frequency content (crackling sounds) - 20%
-        # INCREASED thresholds
         high_freq_ratio = (high + ultra_high) / (low + mid + 0.001)
-        if high_freq_ratio > 1.5:
-            fire_score += 0.20
-        elif high_freq_ratio > 1.0:
-            fire_score += 0.10
-            
-        # 5. Energy variance (non-stationary signal) - 15%
-        # INCREASED thresholds
-        if energy_variance > 2.0:
-            fire_score += 0.15
-        elif energy_variance > 1.0:
-            fire_score += 0.08
-            
-        # Normalize confidence
-        confidence = min(max(fire_score, 0.0), 1.0)
         
-        # Apply threshold - INCREASED to 0.6 for more conservative detection
-        prediction = 1 if confidence > 0.6 else 0
+        # Debug logging
+        print(f"\n=== FALLBACK PREDICTION DEBUG ===")
+        print(f"Total Energy: {total_energy:.4f}")
+        print(f"Std Dev: {mfcc_std:.4f}")
+        print(f"Freq Spread: {freq_spread:.4f}")
+        print(f"High Freq Ratio: {high_freq_ratio:.4f}")
+        print(f"Energy Variance: {energy_variance:.4f}")
+        
+        # NEW APPROACH: Require MULTIPLE strong indicators
+        # Count how many fire characteristics are present
+        fire_indicators = 0
+        
+        # 1. Very high energy (fire is VERY loud)
+        if total_energy > 8.0:
+            fire_indicators += 1
+            print("✓ Very high energy detected")
+            
+        # 2. Very high variance (fire crackles intensely)
+        if mfcc_std > 3.0:
+            fire_indicators += 1
+            print("✓ Very high variance detected")
+            
+        # 3. Very broad frequency range
+        if freq_spread > 5.0:
+            fire_indicators += 1
+            print("✓ Very broad frequency range detected")
+            
+        # 4. Very high frequency content (intense crackling)
+        if high_freq_ratio > 2.0:
+            fire_indicators += 1
+            print("✓ Very high frequency content detected")
+            
+        # 5. Very high energy variance (chaotic signal)
+        if energy_variance > 3.0:
+            fire_indicators += 1
+            print("✓ Very high energy variance detected")
+        
+        print(f"Fire indicators count: {fire_indicators}/5")
+        
+        # Require AT LEAST 3 out of 5 strong indicators for fire detection
+        # This is MUCH more conservative than the additive approach
+        if fire_indicators >= 3:
+            prediction = 1
+            confidence = 0.6 + (fire_indicators - 3) * 0.1  # 0.6, 0.7, or 0.8
+            print(f"PREDICTION: FIRE (confidence: {confidence:.2f})")
+        else:
+            prediction = 0
+            confidence = fire_indicators * 0.15  # Max 0.3 if 2 indicators
+            print(f"PREDICTION: NO FIRE (confidence: {confidence:.2f})")
+        
+        print("=================================\n")
         
         return prediction, confidence
         
@@ -531,9 +541,15 @@ if uploaded_file:
                     st.caption("Inference Source")
                     st.info(source)
                     
-                    st.caption("Feature Stats")
-                    st.text(f"Mean Energy: {np.mean(features):.4f}")
-                    st.text(f"Variance: {np.var(features):.4f}")
+                    st.caption("Feature Statistics")
+                    features_arr = np.array(features)
+                    st.text(f"Total Energy: {np.sum(np.abs(features_arr)):.4f}")
+                    st.text(f"Mean: {np.mean(features_arr):.4f}")
+                    st.text(f"Std Dev: {np.std(features_arr):.4f}")
+                    st.text(f"Variance: {np.var(features_arr):.4f}")
+                    st.text(f"Max: {np.max(features_arr):.4f}")
+                    st.text(f"Min: {np.min(features_arr):.4f}")
+                    st.text(f"Range: {np.max(features_arr) - np.min(features_arr):.4f}")
             
             # Cleanup
             if os.path.exists(temp_path):
