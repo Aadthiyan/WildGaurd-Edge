@@ -318,7 +318,7 @@ def extract_features_for_ei_model(audio_path):
         return None, False
 
 def predict_fire_fallback(features):
-    """EXTREMELY conservative fallback - almost always returns NO FIRE."""
+    """Ultra-conservative fallback Python-based prediction if Node server is down."""
     if features is None:
         return None, None
     
@@ -345,12 +345,15 @@ def predict_fire_fallback(features):
         freq_spread = mfcc_max - mfcc_min
         high_freq_ratio = (high + ultra_high) / (low + mid + 0.001)
         
-        # Additional fire-specific characteristics
+        # NEW: Additional fire-specific characteristics
+        # Spectral irregularity (fire has irregular spectrum)
         spectral_irregularity = np.std(np.abs(features)) / (np.mean(np.abs(features)) + 0.001)
+        
+        # Energy concentration in specific bands (fire has characteristic energy distribution)
         mid_high_energy = (mid + high) / (low + ultra_high + 0.001)
         
         # Debug logging
-        print(f"\n=== EXTREMELY CONSERVATIVE FALLBACK (ALMOST ALWAYS NO FIRE) ===")
+        print(f"\n=== ULTRA-CONSERVATIVE FALLBACK PREDICTION ===")
         print(f"Total Energy: {total_energy:.4f}")
         print(f"Std Dev: {mfcc_std:.4f}")
         print(f"Freq Spread: {freq_spread:.4f}")
@@ -359,66 +362,65 @@ def predict_fire_fallback(features):
         print(f"Spectral Irregularity: {spectral_irregularity:.4f}")
         print(f"Mid-High Energy Ratio: {mid_high_energy:.4f}")
         
-        # EXTREMELY STRICT THRESHOLDS - Nearly impossible to trigger
+        # ULTRA-CONSERVATIVE APPROACH: Require MULTIPLE strong indicators
+        # Count how many fire characteristics are present
         fire_indicators = 0
         
-        # 1. ABSURDLY high energy (fire must be deafeningly loud)
-        # INCREASED: 12.0 → 25.0 (more than doubled!)
-        if total_energy > 25.0:
+        # 1. EXTREMELY high energy (fire is EXTREMELY loud)
+        # INCREASED: 8.0 → 12.0
+        if total_energy > 12.0:
             fire_indicators += 1
-            print("✓ [1/7] Absurdly high energy detected")
+            print("✓ [1/7] Extremely high energy detected")
             
-        # 2. ABSURDLY high variance (extreme crackling)
-        # INCREASED: 5.0 → 10.0 (doubled!)
-        if mfcc_std > 10.0:
+        # 2. EXTREMELY high variance (fire crackles very intensely)
+        # INCREASED: 3.0 → 5.0
+        if mfcc_std > 5.0:
             fire_indicators += 1
-            print("✓ [2/7] Absurdly high variance detected")
+            print("✓ [2/7] Extremely high variance detected")
             
-        # 3. ABSURDLY broad frequency range
-        # INCREASED: 8.0 → 15.0 (nearly doubled!)
-        if freq_spread > 15.0:
+        # 3. EXTREMELY broad frequency range
+        # INCREASED: 5.0 → 8.0
+        if freq_spread > 8.0:
             fire_indicators += 1
-            print("✓ [3/7] Absurdly broad frequency range detected")
+            print("✓ [3/7] Extremely broad frequency range detected")
             
-        # 4. ABSURDLY high frequency content
-        # INCREASED: 3.5 → 7.0 (doubled!)
-        if high_freq_ratio > 7.0:
+        # 4. EXTREMELY high frequency content (very intense crackling)
+        # INCREASED: 2.0 → 3.5
+        if high_freq_ratio > 3.5:
             fire_indicators += 1
-            print("✓ [4/7] Absurdly high frequency content detected")
+            print("✓ [4/7] Extremely high frequency content detected")
             
-        # 5. ABSURDLY high energy variance
-        # INCREASED: 5.0 → 10.0 (doubled!)
-        if energy_variance > 10.0:
+        # 5. EXTREMELY high energy variance (very chaotic signal)
+        # INCREASED: 3.0 → 5.0
+        if energy_variance > 5.0:
             fire_indicators += 1
-            print("✓ [5/7] Absurdly high energy variance detected")
+            print("✓ [5/7] Extremely high energy variance detected")
         
-        # 6. ABSURDLY high spectral irregularity
-        # INCREASED: 2.5 → 5.0 (doubled!)
-        if spectral_irregularity > 5.0:
+        # 6. NEW: High spectral irregularity (fire has very irregular spectrum)
+        if spectral_irregularity > 2.5:
             fire_indicators += 1
-            print("✓ [6/7] Absurdly high spectral irregularity detected")
+            print("✓ [6/7] High spectral irregularity detected (fire characteristic)")
             
-        # 7. ABSURDLY high mid-high energy
-        # INCREASED: 2.0 → 4.0 (doubled!)
-        if mid_high_energy > 4.0:
+        # 7. NEW: Characteristic mid-high energy distribution
+        if mid_high_energy > 2.0:
             fire_indicators += 1
-            print("✓ [7/7] Absurdly high energy distribution detected")
+            print("✓ [7/7] Characteristic fire energy distribution detected")
         
         print(f"\n🔍 Fire indicators count: {fire_indicators}/7")
-        print(f"📊 Required for fire detection: 5/7 indicators (71%)")
+        print(f"📊 Required for fire detection: 4/7 indicators")
         
-        # Require AT LEAST 5 out of 7 indicators (71%)
-        # With these extreme thresholds, virtually NOTHING will trigger fire
-        if fire_indicators >= 5:
+        # Require AT LEAST 4 out of 7 strong indicators for fire detection
+        # This is EXTREMELY conservative - nearly impossible to false positive
+        if fire_indicators >= 4:
             prediction = 1
-            confidence = 0.60 + (fire_indicators - 5) * 0.1  # 0.60 to 0.80
+            confidence = 0.55 + (fire_indicators - 4) * 0.1  # 0.55 to 0.85
             print(f"🔥 PREDICTION: FIRE DETECTED (confidence: {confidence:.2f})")
         else:
             prediction = 0
-            confidence = fire_indicators * 0.10  # Max 0.40 if 4 indicators
+            confidence = fire_indicators * 0.12  # Max 0.36 if 3 indicators
             print(f"✅ PREDICTION: NO FIRE (fire score: {confidence:.2f})")
         
-        print("=" * 70 + "\n")
+        print("=" * 50 + "\n")
         
         return prediction, confidence
         
