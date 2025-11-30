@@ -17,12 +17,13 @@ CONFIG = {
     'n_mfcc': 13,
 }
 
-EI_MODEL_SERVER = 'http://localhost:5001'
+EI_MODEL_SERVER = 'http://127.0.0.1:5001'
 TEMP_DIR = 'temp_uploads'
 os.makedirs(TEMP_DIR, exist_ok=True)
 
 def start_node_server():
     """Start the Node.js model server if it's not running."""
+    # Check if already running
     try:
         requests.get(f'{EI_MODEL_SERVER}/api/health', timeout=1)
         return True
@@ -32,6 +33,7 @@ def start_node_server():
     try:
         node_dir = Path("node")
         if not node_dir.exists():
+            print("Node directory not found")
             return False
 
         # Install dependencies if needed
@@ -39,16 +41,31 @@ def start_node_server():
             with st.spinner("Installing model server dependencies..."):
                 subprocess.run(["npm", "install"], cwd=node_dir, check=True, shell=True)
 
-        # Start server
-        subprocess.Popen(["node", "server.js"], cwd=node_dir, shell=True)
+        # Start server with logging
+        log_file = open("node_server.log", "w")
+        process = subprocess.Popen(
+            ["node", "server.js"], 
+            cwd=node_dir, 
+            shell=True,
+            stdout=log_file,
+            stderr=subprocess.STDOUT
+        )
         
-        # Wait for startup
-        for _ in range(10):
+        # Wait for startup (up to 15 seconds)
+        progress_text = "Starting AI Model Server..."
+        my_bar = st.progress(0, text=progress_text)
+        
+        for i in range(15):
             try:
                 requests.get(f'{EI_MODEL_SERVER}/api/health', timeout=1)
+                my_bar.empty()
                 return True
             except:
                 time.sleep(1)
+                my_bar.progress((i + 1) / 15, text=progress_text)
+        
+        my_bar.empty()
+        print("Timeout waiting for node server")
         return False
     except Exception as e:
         print(f"Failed to start node server: {e}")
@@ -204,9 +221,15 @@ with st.sidebar:
             st.success("✅ Model Server Online")
         else:
             st.warning("⚠️ Model Server Offline")
+            if st.button("Try Restarting Server"):
+                st.session_state.server_started = start_node_server()
+                st.rerun()
     except:
         st.error("❌ Model Server Unreachable")
-        st.caption("Run `node server.js` in `node/` directory")
+        st.caption("Using Python fallback (lower accuracy)")
+        if st.button("Try Restarting Server"):
+            st.session_state.server_started = start_node_server()
+            st.rerun()
 
     st.markdown("---")
     st.info("This interface allows you to test the fire detection model with audio files.")
@@ -290,46 +313,53 @@ with tab1:
 with tab2:
     st.header("Batch Testing")
     
-    col_batch1, col_batch2 = st.columns(2)
-    with col_batch1:
-        test_type = st.selectbox("Test Type", ["Fire Audio", "Non-Fire Audio"])
-    with col_batch2:
-        num_samples = st.slider("Number of Samples", 5, 50, 10)
-        
-    if st.button("Run Batch Test"):
-        base_path = Path('02_dataset/raw/audio_fire/fire') if test_type == "Fire Audio" else Path('02_dataset/raw/audio_non_fire')
-        
-        if base_path.exists():
-            files = list(base_path.glob('**/*.wav'))
-            if files:
-                selected_files = np.random.choice(files, min(len(files), num_samples), replace=False)
-                
-                results = []
-                progress_bar = st.progress(0)
-                
-                for i, file_path in enumerate(selected_files):
-                    features, success = extract_features_for_ei_model(str(file_path))
-                    if success:
-                        pred, conf, text, source = predict_with_ei_server(features)
-                        results.append({
-                            "File": file_path.name,
-                            "Prediction": text,
-                            "Confidence": f"{conf*100:.1f}%",
-                            "Correct": (pred == 1 and test_type == "Fire Audio") or (pred == 0 and test_type == "Non-Fire Audio")
-                        })
-                    progress_bar.progress((i + 1) / len(selected_files))
-                
-                # Display Results
-                df = pd.DataFrame(results)
-                st.dataframe(df)
-                
-                accuracy = df['Correct'].mean() * 100
-                st.metric("Batch Accuracy", f"{accuracy:.1f}%")
-                
+    # Check if dataset exists
+    dataset_path = Path('02_dataset/raw/audio_fire/fire')
+    
+    if not dataset_path.exists():
+        st.warning("⚠️ Dataset not found in this environment.")
+        st.info("Batch testing requires the full dataset, which is not included in the cloud deployment to save space. Please use the Single File Test tab to test individual files.")
+    else:
+        col_batch1, col_batch2 = st.columns(2)
+        with col_batch1:
+            test_type = st.selectbox("Test Type", ["Fire Audio", "Non-Fire Audio"])
+        with col_batch2:
+            num_samples = st.slider("Number of Samples", 5, 50, 10)
+            
+        if st.button("Run Batch Test"):
+            base_path = Path('02_dataset/raw/audio_fire/fire') if test_type == "Fire Audio" else Path('02_dataset/raw/audio_non_fire')
+            
+            if base_path.exists():
+                files = list(base_path.glob('**/*.wav'))
+                if files:
+                    selected_files = np.random.choice(files, min(len(files), num_samples), replace=False)
+                    
+                    results = []
+                    progress_bar = st.progress(0)
+                    
+                    for i, file_path in enumerate(selected_files):
+                        features, success = extract_features_for_ei_model(str(file_path))
+                        if success:
+                            pred, conf, text, source = predict_with_ei_server(features)
+                            results.append({
+                                "File": file_path.name,
+                                "Prediction": text,
+                                "Confidence": f"{conf*100:.1f}%",
+                                "Correct": (pred == 1 and test_type == "Fire Audio") or (pred == 0 and test_type == "Non-Fire Audio")
+                            })
+                        progress_bar.progress((i + 1) / len(selected_files))
+                    
+                    # Display Results
+                    df = pd.DataFrame(results)
+                    st.dataframe(df)
+                    
+                    accuracy = df['Correct'].mean() * 100
+                    st.metric("Batch Accuracy", f"{accuracy:.1f}%")
+                    
+                else:
+                    st.error("No audio files found in dataset directory.")
             else:
-                st.error("No audio files found in dataset directory.")
-        else:
-            st.error(f"Dataset directory not found: {base_path}")
+                st.error(f"Dataset directory not found: {base_path}")
 
 # Footer
 st.markdown("---")
