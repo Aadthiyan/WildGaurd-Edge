@@ -1,0 +1,33 @@
+{
+  "quantization_methods": {
+    "int8_post_training": {
+      "description": "Post-training INT8 quantization",
+      "target_ops": ["Conv2D", "Dense", "GRU"],
+      "calibration_dataset": "validation",
+      "representative_samples": 100
+    },
+    "int8_quantization_aware": {
+      "description": "Quantization-aware training",
+      "target_ops": ["Conv2D", "Dense", "GRU"],
+      "training_epochs": 20,
+      "learning_rate": 0.0001
+    },
+    "dynamic_range": {
+      "description": "Dynamic range quantization",
+      "target_ops": ["all"],
+      "calibration_dataset": "validation"
+    }
+  },
+  "edge_impulse_settings": {
+    "quantization": "int8",
+    "optimization": "latency",
+    "target_device": "cortex-m4f",
+    "target_frequency_mhz": 80
+  },
+  "target_metrics": {
+    "model_size_kb": 300,
+    "latency_ms": 50,
+    "accuracy_drop_max": 0.02
+  }
+}
+

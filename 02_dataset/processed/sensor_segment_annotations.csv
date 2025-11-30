@@ -1,0 +1,4 @@
+segment_id,file_path,start_iso,end_iso,label,source,annotator,notes
+SSEG0001,02_dataset/raw/sensor_fire/nasa_noaa_env_v1/region_ca_2019.parquet,2019-10-24T05:00:00Z,2019-10-24T05:30:00Z,pre_fire_alert,nasa_noaa_env_v1,annotator_sam,"Sharp humidity drop + VOC rise preceding Kincade Fire."
+SSEG0002,02_dataset/raw/sensor_fire/nasa_noaa_env_v1/region_ca_2019.parquet,2019-12-05T12:00:00Z,2019-12-05T12:30:00Z,nominal,nasa_noaa_env_v1,annotator_sam,"Reference cool/wet baseline."
+

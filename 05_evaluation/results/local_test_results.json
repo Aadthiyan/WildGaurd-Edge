@@ -1,0 +1,10 @@
+{
+  "timestamp": "2025-11-30T11:58:43.152254",
+  "test_location": "Windows PC (Local)",
+  "model_accuracy": 98.92,
+  "fire_detection_recall": 99.76,
+  "false_alarm_rate": 3.53,
+  "inference_latency_ms": 32,
+  "tests_executed": 4,
+  "status": "READY FOR DEPLOYMENT"
+}

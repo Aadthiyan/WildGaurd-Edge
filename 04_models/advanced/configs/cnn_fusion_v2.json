@@ -1,0 +1,32 @@
+{
+  "model_name": "CNN-Fusion",
+  "model_type": "cnn_fusion",
+  "description": "CNN model with audio and sensor fusion",
+  "architecture": {
+    "audio_input": "MFCC + Spectrogram",
+    "sensor_input": "Temperature, Humidity, VOC, Pressure",
+    "layers": [
+      "Conv1D(64, 3, activation='relu')",
+      "MaxPooling1D(2)",
+      "Conv1D(128, 3, activation='relu')",
+      "MaxPooling1D(2)",
+      "Flatten()",
+      "Dense(256, activation='relu')",
+      "Dropout(0.5)",
+      "Dense(128, activation='relu')",
+      "Dense(5, activation='softmax')"
+    ]
+  },
+  "hyperparameters": {
+    "epochs": 50,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "validation_split": 0.2,
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy"
+  },
+  "expected_performance": {
+    "accuracy": 0.92,
+    "f1_score": 0.9
+  }
+}

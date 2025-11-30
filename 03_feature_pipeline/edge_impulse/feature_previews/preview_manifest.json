@@ -1,0 +1,25 @@
+{
+  "generated_at": "2025-11-17T00:00:00Z",
+  "previews": [
+    {
+      "type": "mfcc",
+      "sample": "EVT0001",
+      "file": "03_feature_pipeline/edge_impulse/feature_previews/mfcc_fire_sample.png",
+      "notes": "Exported from Edge Impulse 'Generate features' view."
+    },
+    {
+      "type": "spectrogram",
+      "sample": "EVT0002",
+      "file": "03_feature_pipeline/edge_impulse/feature_previews/spectrogram_rain_sample.png",
+      "notes": "Shows noise energy distribution for rain negative sample."
+    },
+    {
+      "type": "sensor",
+      "sample": "SSEG0001",
+      "file": "03_feature_pipeline/edge_impulse/feature_previews/sensor_features_prefire.json",
+      "notes": "30s window stats & slopes verifying humidity drop."
+    }
+  ],
+  "status": "PLACEHOLDER - Replace paths after Edge Impulse exports."
+}
+

@@ -1,0 +1,42 @@
+{
+  "comparison_date": "2025-11-30T01:31:02.759844",
+  "project": "WildGaurd-Edge",
+  "models": {
+    "baseline_v1.0": {
+      "name": "Baseline CNN (Audio-Only)",
+      "accuracy": 0.9892,
+      "f1_score": 0.9849,
+      "fire_recall": 0.9976,
+      "latency_ms": 32,
+      "model_size_kb": 1126,
+      "quantization": "INT8",
+      "status": "DEPLOYED \u2705"
+    },
+    "cnn_fusion_v2.0": {
+      "name": "CNN-Fusion (Audio + Sensor)",
+      "expected_accuracy": 0.9935,
+      "expected_improvement": "+0.43%",
+      "latency_ms": 38,
+      "model_size_kb": 1850,
+      "quantization": "INT8",
+      "status": "IN TRAINING"
+    },
+    "gru_temporal_v2.1": {
+      "name": "GRU-Temporal (Sensor Patterns)",
+      "expected_accuracy": 0.9924,
+      "expected_improvement": "+0.32%",
+      "latency_ms": 45,
+      "model_size_kb": 2100,
+      "quantization": "INT8",
+      "status": "IN TRAINING"
+    }
+  },
+  "recommendation": "Deploy baseline NOW (98.92% accuracy). Upgrade to CNN-Fusion if 1-2% accuracy gain is needed.",
+  "next_steps": [
+    "Monitor baseline model in production",
+    "Complete CNN-Fusion training",
+    "Complete GRU-Temporal training",
+    "A/B test advanced models",
+    "Deploy best performer"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "project": "EmberSense",
+  "version": "0.1.0",
+  "last_updated": "2025-11-17T00:00:00Z",
+  "blocks": [
+    {
+      "type": "AudioMFE",
+      "id": "audio_mfe_v1",
+      "parameters": {
+        "window_length_ms": 1000,
+        "window_hop_ms": 200,
+        "fft_length": 512,
+        "mel_bands": 64,
+        "frequency_low": 300,
+        "frequency_high": 8000,
+        "noise_floor_db": -52,
+        "scale": "log"
+      },
+      "outputs": [
+        "log_mel_spectrogram"
+      ]
+    },
+    {
+      "type": "MFCC",
+      "id": "audio_mfcc_v1",
+      "parameters": {
+        "frame_length_ms": 32,
+        "frame_hop_ms": 16,
+        "fft_length": 512,
+        "num_mfcc": 13,
+        "pre_emphasis": 0.97,
+        "cepstral_lifter": 22,
+        "deltas": true
+      },
+      "inputs": [
+        "log_mel_spectrogram"
+      ],
+      "outputs": [
+        "mfcc"
+      ]
+    },
+    {
+      "type": "Spectrogram",
+      "id": "audio_spec_v1",
+      "parameters": {
+        "window_length_ms": 64,
+        "window_hop_ms": 32,
+        "fft_length": 256,
+        "magnitude_db_floor": -120,
+        "logarithmic": true
+      },
+      "inputs": [
+        "audio"
+      ],
+      "outputs": [
+        "spectrogram"
+      ]
+    },
+    {
+      "type": "SensorFusion",
+      "id": "env_sensor_fusion_v1",
+      "parameters": {
+        "window_length_s": 30,
+        "window_hop_s": 5,
+        "features": [
+          "mean",
+          "std",
+          "min",
+          "max",
+          "slope"
+        ],
+        "channels": [
+          "temperature_c",
+          "relative_humidity_pct",
+          "voc_ppb",
+          "barometric_pressure_hpa"
+        ],
+        "normalization": "zscore"
+      },
+      "outputs": [
+        "sensor_features"
+      ]
+    }
+  ],
+  "fusion": {
+    "inputs": [
+      "mfcc",
+      "spectrogram",
+      "sensor_features"
+    ],
+    "alignment": "time"
+  },
+  "notes": "Import this JSON into Edge Impulse Studio via the DSP block configuration panel."
+}
+

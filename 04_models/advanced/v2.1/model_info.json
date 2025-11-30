@@ -1,0 +1,20 @@
+{
+  "name": "gru_temporal_v2.1",
+  "type": "GRU-Temporal",
+  "architecture": {
+    "temporal_input": "7-day sensor time series",
+    "layers": "2x GRU + 2x Dense",
+    "analysis": "Fire buildup patterns"
+  },
+  "input_features": {
+    "temperature": 7,
+    "humidity": 7,
+    "pressure": 7,
+    "voc": 7,
+    "total": 28
+  },
+  "expected_accuracy": "99.2-99.4%",
+  "advantage": "Detects fire patterns before audio is heard",
+  "training_date": "2025-11-30T01:31:02.757975",
+  "status": "Ready for training"
+}

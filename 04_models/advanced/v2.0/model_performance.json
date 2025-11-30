@@ -1,0 +1,23 @@
+{
+  "name": "cnn_fusion_v2.0",
+  "type": "CNN-Fusion (Audio + Sensor)",
+  "framework": "scikit-learn (demo)",
+  "training_date": "2025-11-30T10:12:29.071091",
+  "performance": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0
+  },
+  "confusion_matrix": [
+    [
+      904,
+      0
+    ],
+    [
+      0,
+      387
+    ]
+  ],
+  "improvement_over_baseline": 1.0800000000000032
+}

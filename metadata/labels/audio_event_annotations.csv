@@ -1,0 +1,5 @@
+event_id,file_path,start_s,end_s,label,confidence,source,annotator,notes
+EVT0001,data/raw/audio/wildfire_acoustic/audioset_wildfire_v1/train/clip_0001.flac,0.00,10.00,fire,0.92,audioset_wildfire_v1,annotator_jane,"Low-intensity ignition; crackle prominent."
+EVT0002,data/raw/audio/negative_events/urbansound8k_neg_v1/fold1/103074-7-0-0.flac,0.00,4.00,rain,0.88,urbansound8k_neg_v1,annotator_lee,"Benign rainfall; tagged as negative control."
+
+

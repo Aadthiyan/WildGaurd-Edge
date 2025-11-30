@@ -1,0 +1,31 @@
+{
+  "pruning_methods": {
+    "magnitude_based": {
+      "description": "Magnitude-based weight pruning",
+      "sparsity_schedule": "polynomial",
+      "initial_sparsity": 0.0,
+      "final_sparsity": 0.5,
+      "begin_step": 0,
+      "end_step": 1000,
+      "frequency": 100
+    },
+    "structured": {
+      "description": "Structured channel pruning",
+      "pruning_type": "channel",
+      "target_layers": ["Conv2D"],
+      "sparsity": 0.3
+    },
+    "iterative": {
+      "description": "Iterative pruning with fine-tuning",
+      "iterations": 3,
+      "sparsity_per_iteration": 0.2,
+      "fine_tune_epochs": 10
+    }
+  },
+  "target_metrics": {
+    "model_size_reduction": 0.4,
+    "latency_reduction": 0.3,
+    "accuracy_drop_max": 0.03
+  }
+}
+

@@ -1,0 +1,61 @@
+# Ignore environment files containing secrets
+.env
+
+# Ignore raw datasets and large generated files
+02_dataset/raw/
+
+# Python cache
+__pycache__/# Environment variables
+.env
+.env.local
+
+# Edge Impulse
+*.eim
+edge_impulse_*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data (large files)
+02_dataset/raw/**/*.flac
+02_dataset/raw/**/*.wav
+02_dataset/raw/**/*.parquet
+02_dataset/processed/**/*.npy
+02_dataset/processed/**/*.parquet
+
+# Models (large files)
+04_models/**/*.h5
+04_models/**/*.pb
+04_models/**/*.tflite
+04_models/**/*.pkl
+04_models/**/checkpoints/
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+

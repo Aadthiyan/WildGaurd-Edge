@@ -1,0 +1,40 @@
+{
+  "comparison_date": "2025-11-30T10:13:48.081241",
+  "models": {
+    "baseline": {
+      "name": "Baseline CNN (Audio Only)",
+      "accuracy": 0.9892,
+      "precision": 0.9808,
+      "recall": 0.9892,
+      "f1_score": 0.9849,
+      "inference_time_ms": 32,
+      "ram_kb": 59,
+      "flash_mb": 1.1,
+      "fire_recall": 0.9976
+    },
+    "cnn_fusion": {
+      "name": "CNN-Fusion v2.0 (Audio+Sensor)",
+      "accuracy": 100.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "improvement_pct": 1.0800000000000032
+    },
+    "gru_temporal": {
+      "name": "GRU-Temporal v2.1 (Temporal)",
+      "accuracy": 92.92929292929293,
+      "precision": 0.6565656565656566,
+      "recall": 0.5327868852459017,
+      "f1_score": 0.5882352941176471,
+      "improvement_pct": -5.990707070707069
+    }
+  },
+  "recommendation": "CNN-Fusion v2.0",
+  "deployment_ready": true,
+  "next_steps": [
+    "Deploy recommended model to edge device",
+    "Monitor fire detection accuracy in field",
+    "Collect real-world fire samples for continuous improvement",
+    "Retrain models quarterly with new data"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "version": "0.1.0",
+  "generated_at": "2025-11-17T00:00:00Z",
+  "sources": [
+    {
+      "name": "AudioSet - Wildfire Acoustic Subset",
+      "id": "audioset_wildfire_v1",
+      "modality": "audio",
+      "license": "Creative Commons Attribution 4.0",
+      "reference": "https://research.google.com/audioset/",
+      "expected_items": 1200,
+      "target_dir": "data/raw/audio/wildfire_acoustic",
+      "labels": [
+        "crackle",
+        "fire",
+        "branch_break",
+        "combustion_pop"
+      ],
+      "notes": "Filter AudioSet ontology for Fire (ID: 528) and manually audit 20% samples."
+    },
+    {
+      "name": "UrbanSound8K - Negative Events",
+      "id": "urbansound8k_neg_v1",
+      "modality": "audio",
+      "license": "Creative Commons Attribution 4.0",
+      "reference": "https://urbansounddataset.weebly.com/urbansound8k.html",
+      "expected_items": 8732,
+      "target_dir": "data/raw/audio/negative_events",
+      "labels": [
+        "air_conditioner",
+        "car_horn",
+        "children_playing",
+        "dog_bark",
+        "drilling",
+        "engine_idling",
+        "gun_shot",
+        "jackhammer",
+        "siren",
+        "street_music"
+      ],
+      "notes": "Acts as background/confounder set; rename labels to EmberSense negative taxonomy in preprocessing."
+    },
+    {
+      "name": "NASA / NOAA Environmental Sensor Pack",
+      "id": "nasa_noaa_env_v1",
+      "modality": "environmental",
+      "license": "NASA Open Data / NOAA Public Domain",
+      "reference": "https://earthdata.nasa.gov/",
+      "expected_items": 520,
+      "target_dir": "data/raw/sensors/environmental",
+      "channels": [
+        "temperature_c",
+        "relative_humidity_pct",
+        "voc_ppb",
+        "barometric_pressure_hpa"
+      ],
+      "notes": "Use API queries for fire-prone regions (US West Coast) during 2018-2024 fire seasons."
+    }
+  ],
+  "checksums": {
+    "audioset_wildfire_v1": "TO_BE_FILLED_AFTER_DOWNLOAD",
+    "urbansound8k_neg_v1": "TO_BE_FILLED_AFTER_DOWNLOAD",
+    "nasa_noaa_env_v1": "TO_BE_FILLED_AFTER_DOWNLOAD"
+  }
+}
+

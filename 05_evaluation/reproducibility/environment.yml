@@ -1,0 +1,17 @@
+name: embersense
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - scipy
+  - librosa
+  - jupyter
+  - pyarrow
+  - scikit-learn
+  - pip
+  - pip:
+    - edge-impulse-cli
+

@@ -1,0 +1,38 @@
+{
+  "generated_at": "2025-11-17T09:20:00Z",
+  "project": "EmberSense",
+  "models": [
+    {
+      "name": "svm_linear_v1",
+      "features": ["mfcc"],
+      "accuracy": 0.72,
+      "f1_macro": 0.70,
+      "latency_ms": 14.2,
+      "flash_kb": 43,
+      "ram_kb": 8,
+      "notes": "Edge Impulse SVM baseline."
+    },
+    {
+      "name": "rf_sensor_v1",
+      "features": ["sensor_fusion"],
+      "accuracy": 0.70,
+      "f1_macro": 0.68,
+      "latency_ms": 9.1,
+      "flash_kb": 88,
+      "ram_kb": 16,
+      "notes": "Random Forest on environmental channels."
+    },
+    {
+      "name": "cnn_fusion_v1",
+      "features": ["mfcc", "spectrogram", "sensor_fusion"],
+      "accuracy": 0.83,
+      "f1_macro": 0.81,
+      "latency_ms": 32.4,
+      "flash_kb": 210,
+      "ram_kb": 42,
+      "notes": "Baseline CNN+GRU fusion; best performer."
+    }
+  ],
+  "best_model": "cnn_fusion_v1"
+}
+

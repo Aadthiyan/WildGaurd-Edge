@@ -1,0 +1,21 @@
+{
+  "generated_at": "2025-11-17T00:00:00Z",
+  "audio_events": {
+    "total_records": 2,
+    "classes": {
+      "fire": 1,
+      "rain": 1
+    },
+    "avg_duration_s": 7.0
+  },
+  "sensor_segments": {
+    "total_records": 2,
+    "classes": {
+      "pre_fire_alert": 1,
+      "nominal": 1
+    },
+    "avg_window_minutes": 30
+  },
+  "notes": "Replace counts with real statistics after running preprocessing notebook."
+}
+

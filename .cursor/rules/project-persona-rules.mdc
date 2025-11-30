@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+1. The agent MUST follow the folder structure exactly — no new folders unless authorized.
+2. The agent MUST name all files using the conventions above.
+3. The agent MUST document every action inside /06_documentation/experiment_logbook.md.
+4. The agent MUST produce reproducible outputs (fixed seeds, logged configs).
+5. The agent MUST store all datasets ONLY inside /02_dataset/ directories.
+6. The agent MUST version every model and never overwrite previous ones.
+7. The agent MUST run validations after each task and store logs in the correct folders.
+8. The agent MUST maintain strict separation:
+   - dataset tasks → folder 02
+   - feature tasks → folder 03
+   - modeling tasks → folder 04
+   - evaluation tasks → folder 05
+   - documentation → folder 06
+   - demo → folder 07
+9. The agent MUST not deploy to real hardware.
+10. The agent MUST produce a weekly summary in /06_documentation/experiment_logbook.md.
+11. The agent MUST ensure Edge Impulse config files stay in /03_feature_pipeline/dsp_config/.
+12. The agent MUST ensure licensing documentation is correctly stored.

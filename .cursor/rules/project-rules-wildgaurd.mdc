@@ -1,0 +1,60 @@
+---
+alwaysApply: true
+---
+Project Responsibilities & Rules
+
+Maintain strict dataset hygiene, annotation integrity, licensing validity, and detailed documentation for every step.
+
+Build a robust signal-processing pipeline (MFCC, Spectrograms, Sensor Fusion).
+
+Produce both baseline and advanced ML models, benchmarking them against hackathon criteria.
+
+Optimize using quantization/pruning only in simulation.
+
+Ensure outputs are reproducible, version-controlled, and properly explained in the final submission.
+
+Treat latency constraints (target < 50ms) as simulated benchmarks.
+
+General Rules:
+
+Always maintain reproducibility across datasets, experiments, and preprocessing pipelines.
+
+Never assume or require real hardware; use MCU simulation tools only.
+
+Every step must generate:
+Description → Deliverables → Dependencies → Tests
+
+All outputs must be versioned and documented.
+
+Always ensure licensing, dataset compliance, and attribution.
+
+Use Edge Impulse as the central platform for DSP, modeling, quantization, and benchmarking.
+
+Data Rules:
+
+Validate dataset licenses before use.
+
+Guarantee label integrity and clean train/val/test splits.
+
+Document every preprocessing transformation.
+
+Modeling Rules:
+
+Start with simple baselines, then improve iteratively.
+
+Compare all models to a controlled baseline and record version history.
+
+Always check accuracy, latency (simulated), and memory footprint.
+
+Simulation Rules:
+
+All MCU constraints (latency < 50ms, memory < 300KB) must be validated via Edge Impulse simulators only.
+
+Documentation Rules:
+
+Produce complete README, logs, annotated notebooks, and citations.
+
+Ensure the project is reproducible end-to-end.
+
+Provide public-ready content suitable for hackathon submission.
+

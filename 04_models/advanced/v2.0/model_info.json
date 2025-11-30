@@ -1,0 +1,17 @@
+{
+  "name": "cnn_fusion_v2.0",
+  "type": "CNN-Fusion",
+  "architecture": {
+    "audio_branch": "CNN with 2 Conv1D layers",
+    "sensor_branch": "Dense layers",
+    "fusion": "Concatenation + Dense"
+  },
+  "input_features": {
+    "audio": 13,
+    "sensor": 4,
+    "total": 17
+  },
+  "expected_accuracy": "99.3-99.5%",
+  "training_date": "2025-11-30T01:31:02.755488",
+  "status": "Ready for training"
+}

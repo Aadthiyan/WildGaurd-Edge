@@ -1,0 +1,32 @@
+{
+  "comparison_date": "2025-11-30T00:50:32.643138",
+  "baseline_model": {
+    "name": "baseline_cnn_int8",
+    "accuracy": 0.9892,
+    "f1_score": 0.9849,
+    "latency_ms": 32,
+    "model_size_kb": 59,
+    "fire_recall": 0.9976,
+    "fire_precision": 0.9647
+  },
+  "advanced_models": {
+    "cnn_fusion": {
+      "status": "Ready for training",
+      "config": "cnn_fusion_v2.json",
+      "expected_accuracy": 0.92,
+      "expected_improvement": "+3-5% vs baseline"
+    },
+    "gru_temporal": {
+      "status": "Ready for training",
+      "config": "gru_temporal_v2.json",
+      "expected_accuracy": 0.9,
+      "expected_improvement": "+1-3% vs baseline"
+    }
+  },
+  "training_schedule": {
+    "phase_1_baseline": "\u2705 COMPLETED",
+    "phase_2_advanced": "\ud83d\udd04 IN PROGRESS",
+    "phase_3_optimization": "\u23f3 PENDING",
+    "phase_4_deployment": "\u23f3 PENDING"
+  }
+}

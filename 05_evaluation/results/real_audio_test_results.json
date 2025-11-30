@@ -1,0 +1,472 @@
+{
+  "timestamp": "1764485710.5144205",
+  "config": {
+    "sr": 16000,
+    "n_mfcc": 13,
+    "fmax": 8000,
+    "n_fft": 1024,
+    "hop_length": 512
+  },
+  "statistics": {
+    "total_samples": 60,
+    "correct_predictions": 42,
+    "overall_accuracy": 0.7,
+    "fire_accuracy": 0.5,
+    "fire_samples": 30,
+    "non_fire_accuracy": 0.9,
+    "non_fire_samples": 30
+  },
+  "sample_results": [
+    {
+      "file": "_G2se_i1dv4_100000_110000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": true,
+      "mfcc_mean": 4.303225517272949,
+      "mfcc_std": 35.48480987548828
+    },
+    {
+      "file": "RkO6Dg02HRk_120000_130000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -20.26195526123047,
+      "mfcc_std": 83.96665954589844
+    },
+    {
+      "file": "XV7KhUaXPVc_10000_20000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": 3.0471458435058594,
+      "mfcc_std": 76.681884765625
+    },
+    {
+      "file": "25p5-gKNe5E_340000_350000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -1.9213840961456299,
+      "mfcc_std": 61.47977066040039
+    },
+    {
+      "file": "cq0WUzg2GYk_20000_30000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": 0.7853798270225525,
+      "mfcc_std": 59.476806640625
+    },
+    {
+      "file": "fDOTsQoJhE0_360000_370000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.639782190322876,
+      "correct": true,
+      "mfcc_mean": -19.776386260986328,
+      "mfcc_std": 89.78241729736328
+    },
+    {
+      "file": "fB-he72HHPM_390000_400000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.6261072158813477,
+      "correct": true,
+      "mfcc_mean": 4.684800148010254,
+      "mfcc_std": 36.99235534667969
+    },
+    {
+      "file": "NLvhyb7tmuI_10000_20000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -9.438741683959961,
+      "mfcc_std": 90.00151062011719
+    },
+    {
+      "file": "NQNimkNFwgU_410000_420000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -12.707737922668457,
+      "mfcc_std": 97.57182312011719
+    },
+    {
+      "file": "kdo15t70FRM_370000_380000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -23.323932647705078,
+      "mfcc_std": 122.1277847290039
+    },
+    {
+      "file": "GoOEPpxWvK0_80000_90000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -23.36341667175293,
+      "mfcc_std": 105.83802795410156
+    },
+    {
+      "file": "lL9qDoKd2_A_0_10000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": true,
+      "mfcc_mean": -25.45305061340332,
+      "mfcc_std": 102.10867309570312
+    },
+    {
+      "file": "QXQygPfdfnE_160000_170000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.5774438381195068,
+      "correct": true,
+      "mfcc_mean": -12.543584823608398,
+      "mfcc_std": 56.95510482788086
+    },
+    {
+      "file": "qaj3NO1Sz1c_160000_170000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.6173665523529053,
+      "correct": true,
+      "mfcc_mean": -4.446706771850586,
+      "mfcc_std": 56.376747131347656
+    },
+    {
+      "file": "EdiBQ0822jQ_80000_90000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": true,
+      "mfcc_mean": -6.035416126251221,
+      "mfcc_std": 28.25984764099121
+    },
+    {
+      "file": "qLHfd2kfIBo_10000_20000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -12.852898597717285,
+      "mfcc_std": 92.53082275390625
+    },
+    {
+      "file": "yV0DNwXn5RU_0_10000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": 5.000349044799805,
+      "mfcc_std": 33.96892166137695
+    },
+    {
+      "file": "DwZdf6pDSfI_70000_80000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.6123573780059814,
+      "correct": true,
+      "mfcc_mean": -8.24867057800293,
+      "mfcc_std": 52.129207611083984
+    },
+    {
+      "file": "jANYm-Hugb4_140000_150000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -0.22266902029514313,
+      "mfcc_std": 55.233585357666016
+    },
+    {
+      "file": "UL8RUHNfILk_10000_20000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": 7.979219913482666,
+      "mfcc_std": 56.699134826660156
+    },
+    {
+      "file": "uY1LJEm-T8w_0_10000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -31.36591339111328,
+      "mfcc_std": 131.7757110595703
+    },
+    {
+      "file": "7qTGhzuCnN0_20000_30000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": true,
+      "mfcc_mean": -5.393247604370117,
+      "mfcc_std": 47.09356689453125
+    },
+    {
+      "file": "q2Zb3zuuOzA_120000_130000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": true,
+      "mfcc_mean": -11.88890552520752,
+      "mfcc_std": 31.687530517578125
+    },
+    {
+      "file": "4k0reRYiGJ8_30000_40000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.6009636521339417,
+      "correct": true,
+      "mfcc_mean": -23.150287628173828,
+      "mfcc_std": 107.15428161621094
+    },
+    {
+      "file": "jgs4lv3vKco_160000_170000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.6228939294815063,
+      "correct": true,
+      "mfcc_mean": -6.199796199798584,
+      "mfcc_std": 52.215476989746094
+    },
+    {
+      "file": "UzI5lgqIDX4_510000_520000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.5797116756439209,
+      "correct": true,
+      "mfcc_mean": -15.301759719848633,
+      "mfcc_std": 69.3676528930664
+    },
+    {
+      "file": "rkU1tkwlcAQ_50000_60000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": true,
+      "mfcc_mean": -15.494617462158203,
+      "mfcc_std": 31.653011322021484
+    },
+    {
+      "file": "U2cRolifTrc_480000_490000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": 0.980576753616333,
+      "mfcc_std": 36.0212516784668
+    },
+    {
+      "file": "hc0dM7CERvc_70000_80000.wav",
+      "true_label": "fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": false,
+      "mfcc_mean": -14.913759231567383,
+      "mfcc_std": 68.93598937988281
+    },
+    {
+      "file": "se6ym1967Gg_110000_120000.wav",
+      "true_label": "fire",
+      "prediction": "FIRE",
+      "confidence": 0.5766626596450806,
+      "correct": true,
+      "mfcc_mean": 1.337872862815857,
+      "mfcc_std": 58.529422760009766
+    },
+    {
+      "file": "2023_12_09_05_58_04_057128.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.99257469177246,
+      "mfcc_std": 149.7409210205078
+    },
+    {
+      "file": "2023_12_09_11_00_19_476112.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -16.72405433654785,
+      "mfcc_std": 148.8099822998047
+    },
+    {
+      "file": "2023_12_09_05_20_36_072250.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -18.141603469848633,
+      "mfcc_std": 149.89881896972656
+    },
+    {
+      "file": "184805-0-0-61.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -15.307501792907715,
+      "mfcc_std": 110.5650634765625
+    },
+    {
+      "file": "106486-5-0-2.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -13.263527870178223,
+      "mfcc_std": 94.8560562133789
+    },
+    {
+      "file": "2023_12_09_16_34_59_292604.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -16.33492660522461,
+      "mfcc_std": 147.62197875976562
+    },
+    {
+      "file": "2023_12_09_04_20_08_098682.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -18.023469924926758,
+      "mfcc_std": 150.20249938964844
+    },
+    {
+      "file": "2023_12_08_21_56_25_440071.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -16.972766876220703,
+      "mfcc_std": 148.4527130126953
+    },
+    {
+      "file": "2023_12_08_18_39_17_097660.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.199018478393555,
+      "mfcc_std": 150.01885986328125
+    },
+    {
+      "file": "15544-5-0-0.wav",
+      "true_label": "non_fire",
+      "prediction": "FIRE",
+      "confidence": 0.65,
+      "correct": false,
+      "mfcc_mean": -8.46250057220459,
+      "mfcc_std": 71.74458312988281
+    },
+    {
+      "file": "2023_12_09_10_33_47_024496.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -16.398088455200195,
+      "mfcc_std": 147.87010192871094
+    },
+    {
+      "file": "2023_12_08_22_03_43_858347.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -16.7882022857666,
+      "mfcc_std": 148.28146362304688
+    },
+    {
+      "file": "2023_12_09_04_03_26_776391.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -18.020891189575195,
+      "mfcc_std": 150.13818359375
+    },
+    {
+      "file": "2023_12_09_16_04_10_351428.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -16.43624496459961,
+      "mfcc_std": 147.65084838867188
+    },
+    {
+      "file": "2023_12_09_00_07_16_791055.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.125473022460938,
+      "mfcc_std": 148.23098754882812
+    },
+    {
+      "file": "2023_12_08_20_50_35_335925.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.11601448059082,
+      "mfcc_std": 148.81320190429688
+    },
+    {
+      "file": "2023_12_08_21_39_54_269984.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.112215042114258,
+      "mfcc_std": 149.44573974609375
+    },
+    {
+      "file": "31884-7-0-0.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": 1.5122699737548828,
+      "mfcc_std": 48.65222930908203
+    },
+    {
+      "file": "2023_12_08_20_56_28_117718.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.14088249206543,
+      "mfcc_std": 149.4930877685547
+    },
+    {
+      "file": "2023_12_09_08_33_42_898601.wav",
+      "true_label": "non_fire",
+      "prediction": "NO FIRE",
+      "confidence": 0.4,
+      "correct": true,
+      "mfcc_mean": -17.67245101928711,
+      "mfcc_std": 149.64613342285156
+    }
+  ],
+  "total_results": 60
+}

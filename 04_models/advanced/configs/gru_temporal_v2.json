@@ -1,0 +1,28 @@
+{
+  "model_name": "GRU-Temporal",
+  "model_type": "gru_temporal",
+  "description": "GRU model for temporal pattern detection",
+  "architecture": {
+    "input": "Temporal sequences of audio features",
+    "layers": [
+      "GRU(128, return_sequences=True)",
+      "Dropout(0.3)",
+      "GRU(64)",
+      "Dropout(0.3)",
+      "Dense(128, activation='relu')",
+      "Dense(5, activation='softmax')"
+    ]
+  },
+  "hyperparameters": {
+    "epochs": 50,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "validation_split": 0.2,
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy"
+  },
+  "expected_performance": {
+    "accuracy": 0.9,
+    "f1_score": 0.88
+  }
+}

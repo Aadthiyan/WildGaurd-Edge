@@ -1,0 +1,32 @@
+{
+  "targets": {
+    "latency_ms": 50.0,
+    "model_size_kb": 300.0,
+    "accuracy_drop_max": 0.02
+  },
+  "mcu_configs": {
+    "cortex-m4f": {
+      "frequency_mhz": 80,
+      "flash_kb": 512,
+      "ram_kb": 128,
+      "description": "ARM Cortex-M4F with FPU"
+    },
+    "cortex-m7": {
+      "frequency_mhz": 480,
+      "flash_kb": 2048,
+      "ram_kb": 1024,
+      "description": "ARM Cortex-M7"
+    }
+  },
+  "test_requirements": {
+    "latency_test": {
+      "description": "Inference latency must be < 50ms",
+      "threshold_ms": 50.0
+    },
+    "size_test": {
+      "description": "Model size must be < 300KB",
+      "threshold_kb": 300.0
+    }
+  }
+}
+

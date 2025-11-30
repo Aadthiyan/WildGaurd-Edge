@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "generated_with": "scripts/preprocessing/generate_splits.py",
+  "seed": 42,
+  "splits": {
+    "train": [],
+    "val": [],
+    "test": []
+  },
+  "notes": "Populate by running the preprocessing notebook once raw data is ingested."
+}
+

@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "generated_with": "02_dataset/scripts/preprocess_audio.py",
+  "seed": 42,
+  "splits": {
+    "train": [],
+    "val": [],
+    "test": []
+  },
+  "notes": "Populate by running the preprocessing notebook once raw data is ingested."
+}
+
