@@ -83,6 +83,14 @@ st.set_page_config(
 if 'server_started' not in st.session_state:
     st.session_state.server_started = start_node_server()
 
+# Debug: Show Node Logs
+with st.sidebar.expander("🛠️ Debug Info"):
+    if os.path.exists("node/node_server.log"):
+        with open("node/node_server.log", "r") as f:
+            st.text_area("Node Server Logs", f.read(), height=200)
+    else:
+        st.info("No server logs found.")
+
 # Custom CSS
 st.markdown("""
     <style>
