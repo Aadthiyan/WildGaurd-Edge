@@ -151,43 +151,74 @@ def extract_features_for_ei_model(audio_path):
         return None, False
 
 def predict_fire_fallback(features):
-    """Fallback Python-based prediction if Node server is down."""
+    """Improved fallback Python-based prediction if Node server is down."""
     if features is None:
         return None, None
     
     try:
         features = np.array(features)
-        mfcc_std = np.std(features)
-        high = np.mean(np.abs(features[7:10]))
-        ultra_high = np.mean(np.abs(features[10:]))
-        mid = np.mean(np.abs(features[4:7]))
         
+        # Calculate comprehensive statistics
+        mfcc_mean = np.mean(features)
+        mfcc_std = np.std(features)
+        mfcc_max = np.max(features)
+        mfcc_min = np.min(features)
+        
+        # Frequency band analysis
+        low = np.mean(np.abs(features[0:3]))      # Low frequencies
+        mid = np.mean(np.abs(features[3:7]))      # Mid frequencies  
+        high = np.mean(np.abs(features[7:10]))    # High frequencies
+        ultra_high = np.mean(np.abs(features[10:]))  # Ultra high frequencies
+        
+        # Total energy
+        total_energy = np.sum(np.abs(features))
+        energy_variance = np.var(features)
+        
+        # Fire detection score (0-1)
         fire_score = 0.0
         
-        # High frequency dominance
-        high_freq_ratio = (high + ultra_high) / (mid + 0.001)
-        if high_freq_ratio > 0.5:
-            fire_score += 0.25 * min(high_freq_ratio / 2.0, 1.0)
-        else:
-            fire_score -= 0.1
+        # 1. High energy content (fire is loud) - 20%
+        if total_energy > 2.0:
+            fire_score += 0.20
+        elif total_energy > 1.0:
+            fire_score += 0.10
             
-        # Spectral variance
-        if mfcc_std > 0.8:
-            fire_score += 0.25 * min(mfcc_std / 2.5, 1.0)
-        elif mfcc_std > 0.5:
+        # 2. High variance (fire crackles and pops) - 25%
+        if mfcc_std > 1.0:
+            fire_score += 0.25
+        elif mfcc_std > 0.6:
             fire_score += 0.15
             
+        # 3. Broadband energy (fire has wide frequency range) - 20%
+        freq_spread = mfcc_max - mfcc_min
+        if freq_spread > 2.0:
+            fire_score += 0.20
+        elif freq_spread > 1.2:
+            fire_score += 0.10
+            
+        # 4. High frequency content (crackling sounds) - 20%
+        high_freq_ratio = (high + ultra_high) / (low + mid + 0.001)
+        if high_freq_ratio > 0.8:
+            fire_score += 0.20
+        elif high_freq_ratio > 0.5:
+            fire_score += 0.10
+            
+        # 5. Energy variance (non-stationary signal) - 15%
+        if energy_variance > 1.0:
+            fire_score += 0.15
+        elif energy_variance > 0.5:
+            fire_score += 0.08
+            
+        # Normalize confidence
         confidence = min(max(fire_score, 0.0), 1.0)
         
-        if confidence > 0.65:
-            confidence = min(confidence * 1.1, 1.0)
-        elif confidence < 0.35:
-            confidence = max(confidence * 0.8, 0.0)
-            
+        # Apply threshold
         prediction = 1 if confidence > 0.5 else 0
+        
         return prediction, confidence
         
     except Exception as e:
+        print(f"Fallback prediction error: {e}")
         return None, None
 
 def predict_with_ei_server(features):
@@ -196,7 +227,7 @@ def predict_with_ei_server(features):
         response = requests.post(
             f'{EI_MODEL_SERVER}/api/predict',
             json={'features': features},
-            timeout=2
+            timeout=5
         )
         
         if response.status_code == 200:
@@ -206,15 +237,21 @@ def predict_with_ei_server(features):
                     result['prediction'],
                     result['confidence'],
                     result['prediction_text'],
-                    'Edge Impulse (Node.js)'
+                    'Edge Impulse (98.92% accuracy)'
                 )
-    except:
-        pass
+        else:
+            print(f"Server returned status code: {response.status_code}")
+    except requests.exceptions.Timeout:
+        print("Node.js server timeout - server may be slow or unresponsive")
+    except requests.exceptions.ConnectionError:
+        print("Node.js server connection error - server may not be running")
+    except Exception as e:
+        print(f"Error calling Edge Impulse server: {e}")
     
     # Fallback
     pred, conf = predict_fire_fallback(features)
     pred_text = 'FIRE DETECTED 🔥' if pred == 1 else 'NO FIRE ✅'
-    return pred, conf, pred_text, 'Fallback (Python)'
+    return pred, conf, pred_text, 'Fallback (Python - Improved)'
 
 # Sidebar
 with st.sidebar:
