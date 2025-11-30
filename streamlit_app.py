@@ -184,7 +184,7 @@ def predict_fire_fallback(features):
         elif confidence < 0.35:
             confidence = max(confidence * 0.8, 0.0)
             
-        prediction = 1 if confidence > 0.45 else 0
+        prediction = 1 if confidence > 0.5 else 0
         return prediction, confidence
         
     except Exception as e:
