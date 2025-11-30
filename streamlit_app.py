@@ -367,59 +367,57 @@ def predict_fire_fallback(features):
         fire_indicators = 0
         
         # 1. EXTREMELY high energy (fire is EXTREMELY loud)
-        # INCREASED: 12.0 → 20.0
-        if total_energy > 20.0:
+        # INCREASED: 8.0 → 12.0
+        if total_energy > 12.0:
             fire_indicators += 1
             print("✓ [1/7] Extremely high energy detected")
             
         # 2. EXTREMELY high variance (fire crackles very intensely)
-        # INCREASED: 5.0 → 8.0
-        if mfcc_std > 8.0:
+        # INCREASED: 3.0 → 5.0
+        if mfcc_std > 5.0:
             fire_indicators += 1
             print("✓ [2/7] Extremely high variance detected")
             
         # 3. EXTREMELY broad frequency range
-        # INCREASED: 8.0 → 12.0
-        if freq_spread > 12.0:
+        # INCREASED: 5.0 → 8.0
+        if freq_spread > 8.0:
             fire_indicators += 1
             print("✓ [3/7] Extremely broad frequency range detected")
             
         # 4. EXTREMELY high frequency content (very intense crackling)
-        # INCREASED: 3.5 → 5.0
-        if high_freq_ratio > 5.0:
+        # INCREASED: 2.0 → 3.5
+        if high_freq_ratio > 3.5:
             fire_indicators += 1
             print("✓ [4/7] Extremely high frequency content detected")
             
         # 5. EXTREMELY high energy variance (very chaotic signal)
-        # INCREASED: 5.0 → 8.0
-        if energy_variance > 8.0:
+        # INCREASED: 3.0 → 5.0
+        if energy_variance > 5.0:
             fire_indicators += 1
             print("✓ [5/7] Extremely high energy variance detected")
         
         # 6. NEW: High spectral irregularity (fire has very irregular spectrum)
-        # INCREASED: 2.5 → 4.0
-        if spectral_irregularity > 4.0:
+        if spectral_irregularity > 2.5:
             fire_indicators += 1
             print("✓ [6/7] High spectral irregularity detected (fire characteristic)")
             
         # 7. NEW: Characteristic mid-high energy distribution
-        # INCREASED: 2.0 → 3.0
-        if mid_high_energy > 3.0:
+        if mid_high_energy > 2.0:
             fire_indicators += 1
             print("✓ [7/7] Characteristic fire energy distribution detected")
         
         print(f"\n🔍 Fire indicators count: {fire_indicators}/7")
-        print(f"📊 Required for fire detection: 5/7 indicators")
+        print(f"📊 Required for fire detection: 4/7 indicators")
         
-        # Require AT LEAST 5 out of 7 strong indicators for fire detection
+        # Require AT LEAST 4 out of 7 strong indicators for fire detection
         # This is EXTREMELY conservative - nearly impossible to false positive
-        if fire_indicators >= 5:
+        if fire_indicators >= 4:
             prediction = 1
-            confidence = 0.6 + (fire_indicators - 5) * 0.1
+            confidence = 0.55 + (fire_indicators - 4) * 0.1  # 0.55 to 0.85
             print(f"🔥 PREDICTION: FIRE DETECTED (confidence: {confidence:.2f})")
         else:
             prediction = 0
-            confidence = fire_indicators * 0.1  # Low confidence in fire
+            confidence = fire_indicators * 0.12  # Max 0.36 if 3 indicators
             print(f"✅ PREDICTION: NO FIRE (fire score: {confidence:.2f})")
         
         print("=" * 50 + "\n")
