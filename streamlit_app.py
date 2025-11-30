@@ -345,42 +345,47 @@ def predict_fire_fallback(features):
         fire_score = 0.0
         
         # 1. High energy content (fire is loud) - 20%
-        if total_energy > 2.0:
+        # INCREASED thresholds to reduce false positives
+        if total_energy > 5.0:
             fire_score += 0.20
-        elif total_energy > 1.0:
+        elif total_energy > 3.0:
             fire_score += 0.10
             
         # 2. High variance (fire crackles and pops) - 25%
-        if mfcc_std > 1.0:
+        # INCREASED thresholds
+        if mfcc_std > 2.0:
             fire_score += 0.25
-        elif mfcc_std > 0.6:
+        elif mfcc_std > 1.2:
             fire_score += 0.15
             
         # 3. Broadband energy (fire has wide frequency range) - 20%
+        # INCREASED thresholds
         freq_spread = mfcc_max - mfcc_min
-        if freq_spread > 2.0:
+        if freq_spread > 4.0:
             fire_score += 0.20
-        elif freq_spread > 1.2:
+        elif freq_spread > 2.5:
             fire_score += 0.10
             
         # 4. High frequency content (crackling sounds) - 20%
+        # INCREASED thresholds
         high_freq_ratio = (high + ultra_high) / (low + mid + 0.001)
-        if high_freq_ratio > 0.8:
+        if high_freq_ratio > 1.5:
             fire_score += 0.20
-        elif high_freq_ratio > 0.5:
+        elif high_freq_ratio > 1.0:
             fire_score += 0.10
             
         # 5. Energy variance (non-stationary signal) - 15%
-        if energy_variance > 1.0:
+        # INCREASED thresholds
+        if energy_variance > 2.0:
             fire_score += 0.15
-        elif energy_variance > 0.5:
+        elif energy_variance > 1.0:
             fire_score += 0.08
             
         # Normalize confidence
         confidence = min(max(fire_score, 0.0), 1.0)
         
-        # Apply threshold
-        prediction = 1 if confidence > 0.5 else 0
+        # Apply threshold - INCREASED to 0.6 for more conservative detection
+        prediction = 1 if confidence > 0.6 else 0
         
         return prediction, confidence
         
@@ -512,10 +517,13 @@ if uploaded_file:
                             </div>
                         """, unsafe_allow_html=True)
                     else:
+                        # When pred == 0, confidence is LOW (< threshold)
+                        # So "no fire confidence" should be HIGH
+                        no_fire_confidence = (1 - conf) * 100
                         st.markdown(f"""
                             <div class="success-box">
                                 <h2>✅ NO FIRE DETECTED</h2>
-                                <p>Confidence: {(1-conf)*100:.1f}% (Safe)</p>
+                                <p>Confidence: {no_fire_confidence:.1f}% (Safe)</p>
                             </div>
                         """, unsafe_allow_html=True)
                         
