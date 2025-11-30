@@ -91,30 +91,197 @@ with st.sidebar.expander("🛠️ Debug Info"):
     else:
         st.info("No server logs found.")
 
-# Custom CSS
+# Custom CSS - Modern Fire Theme
 st.markdown("""
     <style>
-    .main {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    /* Import Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    /* Global Styles */
+    * {
+        font-family: 'Inter', sans-serif;
     }
+    
+    /* Main Background - Dark gradient with fire theme */
+    .main {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    }
+    
+    [data-testid="stSidebar"] h1 {
+        color: #ff6b35 !important;
+        font-weight: 700;
+        text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+    }
+    
+    /* Headers */
+    h1, h2, h3 {
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+    
+    h1 {
+        font-size: 3rem !important;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Subtitle */
+    .subtitle {
+        color: #a0aec0;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Metric Cards */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        color: #ff6b35 !important;
+    }
+    
+    [data-testid="stMetricLabel"] {
+        color: #cbd5e0 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* File Uploader */
+    [data-testid="stFileUploader"] {
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px dashed #ff6b35;
+        border-radius: 15px;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+    }
+    
+    [data-testid="stFileUploader"]:hover {
+        border-color: #f7931e;
+        background: rgba(255, 107, 53, 0.1);
+    }
+    
+    /* Buttons */
     .stButton>button {
         width: 100%;
-        border-radius: 5px;
-        height: 3em;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
     }
+    
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
+    }
+    
+    /* Success Box - No Fire */
     .success-box {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        padding: 2rem;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+        animation: slideIn 0.5s ease;
     }
+    
+    .success-box h2 {
+        color: white !important;
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Error Box - Fire Detected */
     .error-box {
-        padding: 1rem;
-        border-radius: 0.5rem;
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+        padding: 2rem;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+        animation: pulse 2s infinite, slideIn 0.5s ease;
+    }
+    
+    .error-box h2 {
+        color: white !important;
+        font-size: 2rem !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Pulse Animation for Fire Alert */
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5);
+        }
+        50% {
+            box-shadow: 0 8px 40px rgba(239, 68, 68, 0.8);
+        }
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Info Boxes */
+    .stAlert {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-left: 4px solid #ff6b35 !important;
+        border-radius: 10px !important;
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Text Color */
+    p, label, span {
+        color: #cbd5e0 !important;
+    }
+    
+    /* Audio Player */
+    audio {
+        width: 100%;
+        border-radius: 10px;
+        filter: hue-rotate(20deg);
+    }
+    
+    /* Expander */
+    [data-testid="stExpander"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 107, 53, 0.3);
+    }
+    
+    /* Text Area */
+    textarea {
+        background: rgba(0, 0, 0, 0.3) !important;
+        color: #cbd5e0 !important;
+        border: 1px solid rgba(255, 107, 53, 0.3) !important;
+        border-radius: 8px !important;
+    }
+    
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #718096;
+        border-top: 1px solid rgba(255, 107, 53, 0.2);
+        margin-top: 3rem;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -280,26 +447,38 @@ with st.sidebar:
     st.info("This interface allows you to test the fire detection model with audio files.")
 
 # Main Content
-st.title("Wildfire Detection Dashboard")
-st.markdown("Real-time audio analysis for early fire detection.")
+st.markdown("""
+    <h1 style='text-align: center; margin-top: 1rem;'>
+        🔥 WildGaurd-Edge
+    </h1>
+    <p class='subtitle' style='text-align: center;'>
+        AI-Powered Wildfire Detection System | Real-time Audio Analysis
+    </p>
+""", unsafe_allow_html=True)
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Metrics
 metrics = load_model_metrics()
 if metrics:
+    st.markdown("### 📊 Model Performance Metrics")
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Accuracy", f"{metrics.get('validation_metrics', {}).get('accuracy', 0)*100:.1f}%")
+        st.metric("Accuracy", f"{metrics.get('validation_metrics', {}).get('accuracy', 0)*100:.1f}%", delta="High")
     with col2:
-        st.metric("Recall", f"{metrics.get('fire_detection_analysis', {}).get('recall_fire', 0)*100:.1f}%")
+        st.metric("Fire Recall", f"{metrics.get('fire_detection_analysis', {}).get('recall_fire', 0)*100:.1f}%", delta="Excellent")
     with col3:
-        st.metric("Latency", f"{metrics.get('on_device_performance', {}).get('inferencing_time_ms', 0)}ms")
+        st.metric("Latency", f"{metrics.get('on_device_performance', {}).get('inferencing_time_ms', 0)}ms", delta="Fast")
     with col4:
-        st.metric("Model Size", f"{metrics.get('on_device_performance', {}).get('flash_usage_mb', 0)}MB")
+        st.metric("Model Size", f"{metrics.get('on_device_performance', {}).get('flash_usage_mb', 0)}MB", delta="Compact")
+
+st.markdown("<br><br>", unsafe_allow_html=True)
 
 # Test Audio File Section
-st.header("🎙️ Test Audio File")
+st.markdown("### 🎙️ Upload Audio for Fire Detection")
+st.markdown("Upload an audio file to analyze for fire sounds (crackling, burning, etc.)")
 
-uploaded_file = st.file_uploader("Upload WAV, MP3, or OGG file", type=['wav', 'mp3', 'ogg'])
+uploaded_file = st.file_uploader("Drag and drop or click to upload", type=['wav', 'mp3', 'ogg'], label_visibility="collapsed")
 
 if uploaded_file:
     # Save temp file
@@ -353,5 +532,11 @@ if uploaded_file:
                 os.remove(temp_path)
 
 # Footer
-st.markdown("---")
-st.caption("WildGaurd-Edge | Streamlit Dashboard | v1.0")
+st.markdown("""
+    <div class='footer'>
+        <p>🔥 <strong>WildGaurd-Edge</strong> | AI-Powered Wildfire Detection</p>
+        <p style='font-size: 0.9rem; margin-top: 0.5rem;'>
+            Powered by Edge Impulse ML | Built with Streamlit | v1.0
+        </p>
+    </div>
+""", unsafe_allow_html=True)
