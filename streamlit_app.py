@@ -259,115 +259,61 @@ if metrics:
     with col4:
         st.metric("Model Size", f"{metrics.get('on_device_performance', {}).get('flash_usage_mb', 0)}MB")
 
-# Tabs
-tab1, tab2 = st.tabs(["🎙️ Single File Test", "📚 Batch Test"])
+# Test Audio File Section
+st.header("🎙️ Test Audio File")
 
-with tab1:
-    st.header("Test Audio File")
+uploaded_file = st.file_uploader("Upload WAV, MP3, or OGG file", type=['wav', 'mp3', 'ogg'])
+
+if uploaded_file:
+    # Save temp file
+    temp_path = os.path.join(TEMP_DIR, uploaded_file.name)
+    with open(temp_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
     
-    uploaded_file = st.file_uploader("Upload WAV, MP3, or OGG file", type=['wav', 'mp3', 'ogg'])
+    # Audio Player
+    st.audio(uploaded_file)
     
-    if uploaded_file:
-        # Save temp file
-        temp_path = os.path.join(TEMP_DIR, uploaded_file.name)
-        with open(temp_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        
-        # Audio Player
-        st.audio(uploaded_file)
-        
-        if st.button("Analyze Audio", key="analyze_btn"):
-            with st.spinner("Extracting features and analyzing..."):
-                # Extract features
-                features, success = extract_features_for_ei_model(temp_path)
+    if st.button("Analyze Audio", key="analyze_btn"):
+        with st.spinner("Extracting features and analyzing..."):
+            # Extract features
+            features, success = extract_features_for_ei_model(temp_path)
+            
+            if success:
+                # Predict
+                pred, conf, text, source = predict_with_ei_server(features)
                 
-                if success:
-                    # Predict
-                    pred, conf, text, source = predict_with_ei_server(features)
-                    
-                    # Display Result
-                    st.markdown("### Analysis Results")
-                    
-                    res_col1, res_col2 = st.columns([2, 1])
-                    
-                    with res_col1:
-                        if pred == 1:
-                            st.markdown(f"""
-                                <div class="error-box">
-                                    <h2>🔥 FIRE DETECTED</h2>
-                                    <p>Confidence: {conf*100:.1f}%</p>
-                                </div>
-                            """, unsafe_allow_html=True)
-                        else:
-                            st.markdown(f"""
-                                <div class="success-box">
-                                    <h2>✅ NO FIRE DETECTED</h2>
-                                    <p>Confidence: {(1-conf)*100:.1f}% (Safe)</p>
-                                </div>
-                            """, unsafe_allow_html=True)
-                            
-                    with res_col2:
-                        st.caption("Inference Source")
-                        st.info(source)
+                # Display Result
+                st.markdown("### Analysis Results")
+                
+                res_col1, res_col2 = st.columns([2, 1])
+                
+                with res_col1:
+                    if pred == 1:
+                        st.markdown(f"""
+                            <div class="error-box">
+                                <h2>🔥 FIRE DETECTED</h2>
+                                <p>Confidence: {conf*100:.1f}%</p>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown(f"""
+                            <div class="success-box">
+                                <h2>✅ NO FIRE DETECTED</h2>
+                                <p>Confidence: {(1-conf)*100:.1f}% (Safe)</p>
+                            </div>
+                        """, unsafe_allow_html=True)
                         
-                        st.caption("Feature Stats")
-                        st.text(f"Mean Energy: {np.mean(features):.4f}")
-                        st.text(f"Variance: {np.var(features):.4f}")
-                
-                # Cleanup
-                if os.path.exists(temp_path):
-                    os.remove(temp_path)
-
-with tab2:
-    st.header("Batch Testing")
-    
-    # Check if dataset exists
-    dataset_path = Path('02_dataset/raw/audio_fire/fire')
-    
-    if not dataset_path.exists():
-        st.warning("⚠️ Dataset not found in this environment.")
-        st.info("Batch testing requires the full dataset, which is not included in the cloud deployment to save space. Please use the Single File Test tab to test individual files.")
-    else:
-        col_batch1, col_batch2 = st.columns(2)
-        with col_batch1:
-            test_type = st.selectbox("Test Type", ["Fire Audio", "Non-Fire Audio"])
-        with col_batch2:
-            num_samples = st.slider("Number of Samples", 5, 50, 10)
+                with res_col2:
+                    st.caption("Inference Source")
+                    st.info(source)
+                    
+                    st.caption("Feature Stats")
+                    st.text(f"Mean Energy: {np.mean(features):.4f}")
+                    st.text(f"Variance: {np.var(features):.4f}")
             
-        if st.button("Run Batch Test"):
-            base_path = Path('02_dataset/raw/audio_fire/fire') if test_type == "Fire Audio" else Path('02_dataset/raw/audio_non_fire')
-            
-            if base_path.exists():
-                files = list(base_path.glob('**/*.wav'))
-                if files:
-                    selected_files = np.random.choice(files, min(len(files), num_samples), replace=False)
-                    
-                    results = []
-                    progress_bar = st.progress(0)
-                    
-                    for i, file_path in enumerate(selected_files):
-                        features, success = extract_features_for_ei_model(str(file_path))
-                        if success:
-                            pred, conf, text, source = predict_with_ei_server(features)
-                            results.append({
-                                "File": file_path.name,
-                                "Prediction": text,
-                                "Confidence": f"{conf*100:.1f}%",
-                                "Correct": (pred == 1 and test_type == "Fire Audio") or (pred == 0 and test_type == "Non-Fire Audio")
-                            })
-                        progress_bar.progress((i + 1) / len(selected_files))
-                    
-                    # Display Results
-                    df = pd.DataFrame(results)
-                    st.dataframe(df)
-                    
-                    accuracy = df['Correct'].mean() * 100
-                    st.metric("Batch Accuracy", f"{accuracy:.1f}%")
-                    
-                else:
-                    st.error("No audio files found in dataset directory.")
-            else:
-                st.error(f"Dataset directory not found: {base_path}")
+            # Cleanup
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
 
 # Footer
 st.markdown("---")
