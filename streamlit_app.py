@@ -8,6 +8,8 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 import shutil
+import subprocess
+import time
 
 # Configuration
 CONFIG = {
@@ -19,6 +21,39 @@ EI_MODEL_SERVER = 'http://localhost:5001'
 TEMP_DIR = 'temp_uploads'
 os.makedirs(TEMP_DIR, exist_ok=True)
 
+def start_node_server():
+    """Start the Node.js model server if it's not running."""
+    try:
+        requests.get(f'{EI_MODEL_SERVER}/api/health', timeout=1)
+        return True
+    except:
+        pass
+
+    try:
+        node_dir = Path("node")
+        if not node_dir.exists():
+            return False
+
+        # Install dependencies if needed
+        if not (node_dir / "node_modules").exists():
+            with st.spinner("Installing model server dependencies..."):
+                subprocess.run(["npm", "install"], cwd=node_dir, check=True, shell=True)
+
+        # Start server
+        subprocess.Popen(["node", "server.js"], cwd=node_dir, shell=True)
+        
+        # Wait for startup
+        for _ in range(10):
+            try:
+                requests.get(f'{EI_MODEL_SERVER}/api/health', timeout=1)
+                return True
+            except:
+                time.sleep(1)
+        return False
+    except Exception as e:
+        print(f"Failed to start node server: {e}")
+        return False
+
 # Page Config
 st.set_page_config(
     page_title="WildGaurd-Edge",
@@ -26,6 +61,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Initialize Server
+if 'server_started' not in st.session_state:
+    st.session_state.server_started = start_node_server()
 
 # Custom CSS
 st.markdown("""
