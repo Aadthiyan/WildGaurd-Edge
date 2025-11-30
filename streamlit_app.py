@@ -1,0 +1,297 @@
+import streamlit as st
+import os
+import json
+import numpy as np
+import librosa
+import requests
+import pandas as pd
+from pathlib import Path
+from datetime import datetime
+import shutil
+
+# Configuration
+CONFIG = {
+    'sr': 16000,
+    'n_mfcc': 13,
+}
+
+EI_MODEL_SERVER = 'http://localhost:5001'
+TEMP_DIR = 'temp_uploads'
+os.makedirs(TEMP_DIR, exist_ok=True)
+
+# Page Config
+st.set_page_config(
+    page_title="WildGaurd-Edge",
+    page_icon="🔥",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Custom CSS
+st.markdown("""
+    <style>
+    .main {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    .stButton>button {
+        width: 100%;
+        border-radius: 5px;
+        height: 3em;
+    }
+    .success-box {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .error-box {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+def load_model_metrics():
+    try:
+        with open('04_models/baseline/baseline_performance.json', 'r') as f:
+            return json.load(f)
+    except:
+        return None
+
+def extract_features_for_ei_model(audio_path):
+    """Extract features exactly as Edge Impulse expects them."""
+    try:
+        y, sr = librosa.load(audio_path, sr=CONFIG['sr'])
+        
+        # Extract MFCC (13 coefficients)
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=CONFIG['n_mfcc'])
+        mfcc_mean = np.mean(mfcc, axis=1)
+        
+        # Extract Mel-Frequency Energy
+        mel_spec = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=64)
+        mel_energy = np.mean(mel_spec, axis=1)
+        
+        # Combine features
+        combined_features = np.concatenate([
+            mfcc_mean,
+            mel_energy[:8]
+        ])
+        
+        return combined_features.tolist(), True
+    except Exception as e:
+        st.error(f"Feature extraction error: {e}")
+        return None, False
+
+def predict_fire_fallback(features):
+    """Fallback Python-based prediction if Node server is down."""
+    if features is None:
+        return None, None
+    
+    try:
+        features = np.array(features)
+        mfcc_std = np.std(features)
+        high = np.mean(np.abs(features[7:10]))
+        ultra_high = np.mean(np.abs(features[10:]))
+        mid = np.mean(np.abs(features[4:7]))
+        
+        fire_score = 0.0
+        
+        # High frequency dominance
+        high_freq_ratio = (high + ultra_high) / (mid + 0.001)
+        if high_freq_ratio > 0.5:
+            fire_score += 0.25 * min(high_freq_ratio / 2.0, 1.0)
+        else:
+            fire_score -= 0.1
+            
+        # Spectral variance
+        if mfcc_std > 0.8:
+            fire_score += 0.25 * min(mfcc_std / 2.5, 1.0)
+        elif mfcc_std > 0.5:
+            fire_score += 0.15
+            
+        confidence = min(max(fire_score, 0.0), 1.0)
+        
+        if confidence > 0.65:
+            confidence = min(confidence * 1.1, 1.0)
+        elif confidence < 0.35:
+            confidence = max(confidence * 0.8, 0.0)
+            
+        prediction = 1 if confidence > 0.45 else 0
+        return prediction, confidence
+        
+    except Exception as e:
+        return None, None
+
+def predict_with_ei_server(features):
+    """Call Node.js server for prediction."""
+    try:
+        response = requests.post(
+            f'{EI_MODEL_SERVER}/api/predict',
+            json={'features': features},
+            timeout=2
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            if result['status'] == 'success':
+                return (
+                    result['prediction'],
+                    result['confidence'],
+                    result['prediction_text'],
+                    'Edge Impulse (Node.js)'
+                )
+    except:
+        pass
+    
+    # Fallback
+    pred, conf = predict_fire_fallback(features)
+    pred_text = 'FIRE DETECTED 🔥' if pred == 1 else 'NO FIRE ✅'
+    return pred, conf, pred_text, 'Fallback (Python)'
+
+# Sidebar
+with st.sidebar:
+    st.title("🔥 WildGaurd-Edge")
+    st.markdown("---")
+    
+    # Server Status
+    st.subheader("System Status")
+    try:
+        resp = requests.get(f'{EI_MODEL_SERVER}/api/health', timeout=1)
+        if resp.status_code == 200:
+            st.success("✅ Model Server Online")
+        else:
+            st.warning("⚠️ Model Server Offline")
+    except:
+        st.error("❌ Model Server Unreachable")
+        st.caption("Run `node server.js` in `node/` directory")
+
+    st.markdown("---")
+    st.info("This interface allows you to test the fire detection model with audio files.")
+
+# Main Content
+st.title("Wildfire Detection Dashboard")
+st.markdown("Real-time audio analysis for early fire detection.")
+
+# Metrics
+metrics = load_model_metrics()
+if metrics:
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Accuracy", f"{metrics.get('validation_metrics', {}).get('accuracy', 0)*100:.1f}%")
+    with col2:
+        st.metric("Recall", f"{metrics.get('fire_detection_analysis', {}).get('recall_fire', 0)*100:.1f}%")
+    with col3:
+        st.metric("Latency", f"{metrics.get('on_device_performance', {}).get('inferencing_time_ms', 0)}ms")
+    with col4:
+        st.metric("Model Size", f"{metrics.get('on_device_performance', {}).get('flash_usage_mb', 0)}MB")
+
+# Tabs
+tab1, tab2 = st.tabs(["🎙️ Single File Test", "📚 Batch Test"])
+
+with tab1:
+    st.header("Test Audio File")
+    
+    uploaded_file = st.file_uploader("Upload WAV, MP3, or OGG file", type=['wav', 'mp3', 'ogg'])
+    
+    if uploaded_file:
+        # Save temp file
+        temp_path = os.path.join(TEMP_DIR, uploaded_file.name)
+        with open(temp_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
+        
+        # Audio Player
+        st.audio(uploaded_file)
+        
+        if st.button("Analyze Audio", key="analyze_btn"):
+            with st.spinner("Extracting features and analyzing..."):
+                # Extract features
+                features, success = extract_features_for_ei_model(temp_path)
+                
+                if success:
+                    # Predict
+                    pred, conf, text, source = predict_with_ei_server(features)
+                    
+                    # Display Result
+                    st.markdown("### Analysis Results")
+                    
+                    res_col1, res_col2 = st.columns([2, 1])
+                    
+                    with res_col1:
+                        if pred == 1:
+                            st.markdown(f"""
+                                <div class="error-box">
+                                    <h2>🔥 FIRE DETECTED</h2>
+                                    <p>Confidence: {conf*100:.1f}%</p>
+                                </div>
+                            """, unsafe_allow_html=True)
+                        else:
+                            st.markdown(f"""
+                                <div class="success-box">
+                                    <h2>✅ NO FIRE DETECTED</h2>
+                                    <p>Confidence: {(1-conf)*100:.1f}% (Safe)</p>
+                                </div>
+                            """, unsafe_allow_html=True)
+                            
+                    with res_col2:
+                        st.caption("Inference Source")
+                        st.info(source)
+                        
+                        st.caption("Feature Stats")
+                        st.text(f"Mean Energy: {np.mean(features):.4f}")
+                        st.text(f"Variance: {np.var(features):.4f}")
+                
+                # Cleanup
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+
+with tab2:
+    st.header("Batch Testing")
+    
+    col_batch1, col_batch2 = st.columns(2)
+    with col_batch1:
+        test_type = st.selectbox("Test Type", ["Fire Audio", "Non-Fire Audio"])
+    with col_batch2:
+        num_samples = st.slider("Number of Samples", 5, 50, 10)
+        
+    if st.button("Run Batch Test"):
+        base_path = Path('02_dataset/raw/audio_fire/fire') if test_type == "Fire Audio" else Path('02_dataset/raw/audio_non_fire')
+        
+        if base_path.exists():
+            files = list(base_path.glob('**/*.wav'))
+            if files:
+                selected_files = np.random.choice(files, min(len(files), num_samples), replace=False)
+                
+                results = []
+                progress_bar = st.progress(0)
+                
+                for i, file_path in enumerate(selected_files):
+                    features, success = extract_features_for_ei_model(str(file_path))
+                    if success:
+                        pred, conf, text, source = predict_with_ei_server(features)
+                        results.append({
+                            "File": file_path.name,
+                            "Prediction": text,
+                            "Confidence": f"{conf*100:.1f}%",
+                            "Correct": (pred == 1 and test_type == "Fire Audio") or (pred == 0 and test_type == "Non-Fire Audio")
+                        })
+                    progress_bar.progress((i + 1) / len(selected_files))
+                
+                # Display Results
+                df = pd.DataFrame(results)
+                st.dataframe(df)
+                
+                accuracy = df['Correct'].mean() * 100
+                st.metric("Batch Accuracy", f"{accuracy:.1f}%")
+                
+            else:
+                st.error("No audio files found in dataset directory.")
+        else:
+            st.error(f"Dataset directory not found: {base_path}")
+
+# Footer
+st.markdown("---")
+st.caption("WildGaurd-Edge | Streamlit Dashboard | v1.0")
